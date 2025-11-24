@@ -15,6 +15,8 @@ public class BossController : MonoBehaviour
     public float DefaultHeight;
     public float MaxHeight = 12f;
 
+    public Transform BossPosition { get; private set; }
+
     private IBossState currentState;
 
     private void OnEnable()
@@ -38,10 +40,13 @@ public class BossController : MonoBehaviour
 
     private void Update()
     {
+        BossPosition = this.transform;
+
         if (currentState != null)
         {
             currentState.UpdateState(this);
         }
+
     }
 
     public void ChangeState(IBossState newState)
@@ -60,6 +65,18 @@ public class BossController : MonoBehaviour
         if (currentState != null)
         {
             ChangeState(new BossMovingState());
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            IDamageable damageable = other.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.OnTakingDamage();
+            }
         }
     }
 }

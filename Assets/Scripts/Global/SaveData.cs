@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class SaveData : MonoBehaviour
     [SerializeField] private int player2SelectedCharacter;
     [SerializeField] private int musicValue;
     [SerializeField] private int sfxValue;
+    [SerializeField] private List<float> scores = new List<float>();
 
     public int Player1SelectedCharacter => player1SelectedCharacter;
     public int Player2SelectedCharacter => player2SelectedCharacter;
@@ -108,6 +110,13 @@ public class SaveData : MonoBehaviour
         int playerIndex = (int)index;
 
         player2SelectedCharacter = playerIndex;
+
+        SaveIntoJson();
+    }
+
+    public void UpdateLeaderboard()
+    {
+        scores = LeaderboardData.instance.Scores;
 
         SaveIntoJson();
     }

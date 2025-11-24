@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PickableRocket : BaseRocket
+public class PickableRocket : BaseRocket, IInteractable
 {
     private float minXPosition = -15f;
     private float maxXPosition = 15f;
@@ -11,9 +11,35 @@ public class PickableRocket : BaseRocket
 
     [SerializeField] private Vector3 throwTarget;
 
-    private void FixedUpdate()
+    private Transform targetParent;
+
+    private CapsuleCollider rocketCollider;
+
+    private bool canMove = false;
+    private bool onInteract = false;
+
+    private void Start()
     {
-        Move(throwTarget);
+        rocketCollider = GetComponent<CapsuleCollider>();
+        rocketCollider.isTrigger = false;
+    }
+
+    private void Update()
+    {
+        if (canMove)
+        {
+            Move(throwTarget);
+        }
+
+        if(onInteract)
+        {
+            transform.localPosition = Vector3.zero;
+        }
+
+        if (Vector3.Distance(transform.position, throwTarget) < 0.1f)
+        {
+            canMove = false;
+        }
     }
 
     public void ThrowRocket()
@@ -22,5 +48,48 @@ public class PickableRocket : BaseRocket
         zTargetPosition = Random.Range(minZPosition, maxZPosition);
 
         throwTarget = new Vector3(xTargetPosition, 1f, zTargetPosition);
+
+        canMove = true;
+    }
+
+    public void Launch()
+    {
+        GameObject boss = GameObject.FindWithTag("Enemy");
+
+        if (boss != null)
+        {
+            BossController bossController = boss.GetComponent<BossController>();
+            if (bossController != null)
+            {
+                throwTarget = bossController.BossPosition.position;
+
+                onInteract = false;
+                rocketCollider.isTrigger = true;
+                canMove = true;
+            }
+        }
+    }
+
+    public void OnInteract(Transform target)
+    {
+        targetParent = target;
+        onInteract = true;
+
+        transform.SetParent(targetParent);
+        transform.localPosition = Vector3.zero;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Enemy"))
+        {
+            IDamageable target = other.GetComponent<IDamageable>();
+            if (target != null)
+            {
+                target.OnTakingDamage();
+                Destroy(gameObject);
+            }
+        }
+        
     }
 }

@@ -22,8 +22,6 @@ public class BossAttackVariant2State : BaseBossState
     {
         base.EnterState(boss);
 
-        Debug.Log("Entered Attack Variant 2 State");
-
         hasAttacked = false;
         returnToOriginal = false;
 
@@ -71,9 +69,8 @@ public class BossAttackVariant2State : BaseBossState
         {
             return;
         }
+
         boss.StartCoroutine(AttackDelayCoroutine(boss, 3.0f));
-
-
     }
 
     public override void ExitState(BossController boss)
@@ -93,14 +90,8 @@ public class BossAttackVariant2State : BaseBossState
 
         if (boss.Rb.angularVelocity == Vector3.zero)
         {
-            Debug.Log("Attack executed");
             yield return new WaitForSeconds(1f);
             returnToOriginal = true;
         }
-
-        
-        //Debug.Log("Change state");
-        //boss.ChangeState(new BossAttackVariant3State());
-
     }
 }

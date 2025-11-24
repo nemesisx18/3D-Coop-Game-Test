@@ -7,6 +7,8 @@ public class CharacterData : MonoBehaviour, IDamageable
 
     [SerializeField] private Canvas characterCanvas;
 
+    [SerializeField] private Transform rocketPlaceholder;
+
     private CharacterMotor characterMotor;
 
     private int characterIndex;
@@ -18,7 +20,7 @@ public class CharacterData : MonoBehaviour, IDamageable
     public int CharacterHealth => characterHealth;
     public int CharacterIndex => characterIndex;
 
-    private float maxDistance = 5f;
+    private float maxDistance = 10f;
 
     private void Start()
     {
@@ -62,14 +64,44 @@ public class CharacterData : MonoBehaviour, IDamageable
 
     public void OnActionKeyPressed()
     {
-        //TO:DO Implement pickup rocket logic
+        Debug.Log(CheckRocketInPlaceholder());
+
+        switch (CheckRocketInPlaceholder())
+        {
+            case true:
+                LaunchRocket();
+                break;
+            case false:
+                InteractWithObject();
+                break;
+        }
+    }
+
+    private void InteractWithObject()
+    {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, maxDistance))
         {
-            if (hit.collider != null && hit.collider.CompareTag("Rocket"))
+            Debug.Log("Hit: " + hit.collider.name);
+
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable != null)
             {
-                // Implement logic to pick up the rocket
-                Debug.Log("Rocket picked up!");
+                interactable.OnInteract(rocketPlaceholder);
+            }
+        }
+    }
+
+    private void LaunchRocket()
+    {
+        if (rocketPlaceholder.childCount > 0)
+        {
+            Transform rocket = rocketPlaceholder.GetChild(0);
+            PickableRocket rocketComponent = rocket.GetComponent<PickableRocket>();
+            if (rocketComponent != null)
+            {
+                rocketComponent.Launch();
+                rocket.SetParent(null);
             }
         }
     }
@@ -82,5 +114,10 @@ public class CharacterData : MonoBehaviour, IDamageable
         {
             characterCanvas.gameObject.SetActive(isBeingTargeted);
         }
+    }
+
+    private bool CheckRocketInPlaceholder()
+    {
+        return rocketPlaceholder.childCount > 0;
     }
 }

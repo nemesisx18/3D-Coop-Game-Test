@@ -9,8 +9,6 @@ public class BossAttackVariant1State : BaseBossState
     {
         base.EnterState(boss);
 
-        Debug.Log("Entered Attack Variant 1 State");
-
         boss.FireFlameEffect.SetActive(true);
         boss.FireFlameEffect.transform.localScale = new Vector3(0.1f, 0.02f, 0.1f);
     }
@@ -41,8 +39,6 @@ public class BossAttackVariant1State : BaseBossState
 
         if (Physics.Raycast(boss.RaycastPoint.position, boss.transform.forward, out hit, 50f))
         {
-            Debug.Log("BossAttackVariant1State: Raycast hit " + hit.collider.name);
-
             IDamageable damageable = hit.collider.GetComponent<IDamageable>();
             if (damageable != null)
             {

@@ -11,6 +11,11 @@ public class LoadingBarProgression : MonoBehaviour
 
     private const string GAMEPLAY_SCENE_NAME = "GameplayScene";
 
+    private void Start()
+    {
+        loadingBar.maxValue = waitTime; 
+    }
+
     private void Update()
     {
         if (progress < waitTime)

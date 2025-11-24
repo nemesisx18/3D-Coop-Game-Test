@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BaseRocket : MonoBehaviour
 {
-    protected float rocketSpeed = 10f;
+    protected float rocketSpeed = 20f;
 
     protected virtual void Move(Vector3 targetPosition)
     {

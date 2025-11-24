@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,6 +9,8 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] private GameObject EndGameMenu;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button returnToMenuButton;
+    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI timeResultText;
 
     [Space]
     [Header("Player 1")]
@@ -26,11 +29,13 @@ public class GameplayUI : MonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening("CharacterDamaged", OnCharacterDamaged);
+        EventManager.StartListening("GameResult", OnGameOver);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening("CharacterDamaged", OnCharacterDamaged);
+        EventManager.StopListening("GameResult", OnGameOver);
     }
 
     private void Start()
@@ -57,16 +62,11 @@ public class GameplayUI : MonoBehaviour
         SceneManager.LoadScene(MENU_SCENE_NAME);
     }
 
-    private void UpdateHealthUI()
-    {
-
-    }
-
     private void OnCharacterDamaged(object message)
     {
         CharacterTakeDamageMessage dmgMessage = (CharacterTakeDamageMessage)message;
 
-        switch(dmgMessage.CharacterIndex)
+        switch (dmgMessage.CharacterIndex)
         {
             case 0:
                 for (int i = 0; i < player1Healths.Length; i++)
@@ -98,5 +98,27 @@ public class GameplayUI : MonoBehaviour
                 Debug.LogError("Invalid character index in OnCharacterDamaged");
                 break;
         }
+    }
+
+    private void OnGameOver(object message)
+    {
+        GameResultMessage result = (GameResultMessage)message;
+
+        int minutes = Mathf.FloorToInt(result.GameTime / 60);
+        int seconds = Mathf.FloorToInt(result.GameTime % 60);
+
+        switch (result.ResultBool)
+        {
+            case true:
+                resultText.text = "You Win!";
+                break;
+            case false:
+                resultText.text = "You Lost!";
+                break;
+        }
+
+        timeResultText.text = string.Format("{00:00}:{1:00}", minutes, seconds);
+
+        EndGameMenu.SetActive(true);
     }
 }

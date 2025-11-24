@@ -12,7 +12,7 @@ public class BossController : MonoBehaviour
     public float DefaultHeight;
     public float MaxHeight = 12f;
 
-    public Transform BossPosition { get; private set; }
+    public Vector3 BossPosition { get; private set; }
 
     private IBossState currentState;
 
@@ -44,7 +44,7 @@ public class BossController : MonoBehaviour
 
     private void Update()
     {
-        BossPosition = this.transform;
+        BossPosition = transform.position;
 
         if (currentState != null)
         {

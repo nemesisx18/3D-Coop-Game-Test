@@ -63,8 +63,6 @@ public class CharacterData : MonoBehaviour, IDamageable
 
     public void OnActionKeyPressed()
     {
-        Debug.Log(CheckRocketInPlaceholder());
-
         switch (CheckRocketInPlaceholder())
         {
             case true:

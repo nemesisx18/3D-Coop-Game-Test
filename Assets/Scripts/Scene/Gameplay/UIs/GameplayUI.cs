@@ -126,7 +126,7 @@ public class GameplayUI : MonoBehaviour
                 break;
         }
 
-        timeResultText.text = string.Format("{00:00}:{1:00}", minutes, seconds);
+        timeResultText.text = string.Format("Your time is " + "{00:00}:{1:00}", minutes, seconds);
 
         EndGameMenu.SetActive(true);
     }

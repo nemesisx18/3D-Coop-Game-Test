@@ -57,7 +57,7 @@ public class LeaderboardData : MonoBehaviour
         if (scores.Count == 10)
         {
             float longestScore = Mathf.Max(scores.ToArray());
-            if (message.GameTime > longestScore)
+            if (message.GameTime < longestScore)
             {
                 scores.Remove(longestScore);
             }

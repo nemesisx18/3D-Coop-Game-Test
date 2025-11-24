@@ -1,34 +1,22 @@
-using System.Collections;
 using UnityEngine;
 
 public class ExplosiveRocket : BaseRocket
 {
     [SerializeField] private CharacterData targetPlayerPosition;
 
-    private void OnDisable()
+    private void Start()
     {
-        EventManager.TriggerEvent("OnRocketHit");
+        Destroy(gameObject, 5f);
     }
 
     private void FixedUpdate()
     {
         Move(targetPlayerPosition.CharacterPosition);
-
-        if (Vector3.Distance(transform.position, targetPlayerPosition.CharacterPosition) < 0.5f)
-        {
-            Debug.Log("Stop tracking target");
-        }
     }
 
     public void LaunchRocket(CharacterData target)
     {
         targetPlayerPosition = target;
-    }
-
-    private IEnumerator DelayDeactivate()
-    {
-        yield return new WaitForSeconds(0.75f);
-        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +28,7 @@ public class ExplosiveRocket : BaseRocket
             {
                 damageable.OnTakingDamage();
 
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
         }
     }

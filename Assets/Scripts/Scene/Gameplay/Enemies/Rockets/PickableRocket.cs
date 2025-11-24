@@ -11,19 +11,33 @@ public class PickableRocket : BaseRocket, IInteractable
 
     [SerializeField] private Vector3 throwTarget;
 
+    private BossController bossController;
+
     private Transform targetParent;
 
     private bool canMove = false;
     private bool onInteract = false;
+    private bool explosive = false;
+
+    private void Start()
+    {
+        GameObject boss = GameObject.FindWithTag("Enemy");
+        bossController = boss.GetComponent<BossController>();
+    }
 
     private void Update()
     {
+        if(explosive)
+        {
+            throwTarget = bossController.BossPosition;
+        }
+        
         if (canMove)
         {
             Move(throwTarget);
         }
 
-        if(onInteract)
+        if (onInteract)
         {
             transform.localPosition = Vector3.zero;
         }
@@ -46,18 +60,11 @@ public class PickableRocket : BaseRocket, IInteractable
 
     public void Launch()
     {
-        GameObject boss = GameObject.FindWithTag("Enemy");
-
-        if (boss != null)
+        if (bossController != null)
         {
-            BossController bossController = boss.GetComponent<BossController>();
-            if (bossController != null)
-            {
-                throwTarget = bossController.BossPosition.position;
-
-                onInteract = false;
-                canMove = true;
-            }
+            onInteract = false;
+            canMove = true;
+            explosive = true;
         }
     }
 
@@ -72,7 +79,7 @@ public class PickableRocket : BaseRocket, IInteractable
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Enemy") && !onInteract)
+        if (other.gameObject.CompareTag("Enemy") && explosive)
         {
             IDamageable target = other.GetComponent<IDamageable>();
             if (target != null)
@@ -81,6 +88,5 @@ public class PickableRocket : BaseRocket, IInteractable
                 Destroy(gameObject);
             }
         }
-        
     }
 }

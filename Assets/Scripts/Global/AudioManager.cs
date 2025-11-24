@@ -69,8 +69,6 @@ public class AudioManager : MonoBehaviour
             IsMusicOn = false;
         }
 
-        Debug.Log("Music is " + IsMusicOn);
-
         int sfxDataHolder = saveData.SfxValue;
 
         if (sfxDataHolder == 1)
@@ -81,14 +79,12 @@ public class AudioManager : MonoBehaviour
         {
             IsSfxOn = false;
         }
-
-        Debug.Log("SFX is " + IsSfxOn);
     }
 
     private void ToggleMusic()
     {
         IsMusicOn = !IsMusicOn;
-        if(IsMusicOn)
+        if (IsMusicOn)
         {
             saveData.UpdateMusicValue(1);
         }
@@ -101,7 +97,7 @@ public class AudioManager : MonoBehaviour
     private void ToggleSfx()
     {
         IsSfxOn = !IsSfxOn;
-        if(IsSfxOn)
+        if (IsSfxOn)
         {
             saveData.UpdateSfxValue(1);
         }

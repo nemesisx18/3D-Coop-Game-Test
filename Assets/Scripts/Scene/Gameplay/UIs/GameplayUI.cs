@@ -42,9 +42,18 @@ public class GameplayUI : MonoBehaviour
     {
         saveData = SaveData.SaveDataInstance;
 
+        SetupPlayerAvatar();
+        SetupButton();
+    }
+
+    private void SetupPlayerAvatar()
+    {
         player1Icons[saveData.Player1SelectedCharacter].SetActive(true);
         player2Icons[saveData.Player2SelectedCharacter].SetActive(true);
+    }
 
+    private void SetupButton()
+    {
         restartButton.onClick.RemoveAllListeners();
         restartButton.onClick.AddListener(OnRestartGame);
 

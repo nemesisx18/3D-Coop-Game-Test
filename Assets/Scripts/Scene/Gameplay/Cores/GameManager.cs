@@ -4,6 +4,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameTimer gameTimer;
 
+    private bool isP1Alive = true;
+    private bool isP2Alive = true;
+
     private float gameFinalTime;
 
     private int remainingCharacters = 2;
@@ -18,20 +21,33 @@ public class GameManager : MonoBehaviour
     {
         EventManager.StopListening("CharacterDefeated", OnCharacterDefeated);
         EventManager.StopListening("GameOver", EndGame);
+
+        Time.timeScale = 1;
     }
 
-    private void Update()
+    private void Awake()
     {
-
+        Time.timeScale = 1;
     }
 
     private void OnCharacterDefeated(object message)
     {
-        remainingCharacters--;
-        if (remainingCharacters <= 0)
-        {
-            Debug.Log("All characters defeated! Game Over.");
+        int charaID = (int)message;
 
+        switch (charaID)
+        {
+            case 0:
+                isP1Alive = false;
+                remainingCharacters--; 
+                break;
+            case 1:
+                isP2Alive = false;
+                remainingCharacters--; 
+                break;
+        }
+
+        if (!isP1Alive && !isP2Alive)
+        {
             EndGame("Lose");
         }
     }
@@ -41,8 +57,10 @@ public class GameManager : MonoBehaviour
         string resultMessage = (string)result;
 
         gameFinalTime = gameTimer.Timer;
-        
-        switch(result)
+
+        Time.timeScale = 0;
+
+        switch (result)
         {
             case "Win":
                 EventManager.TriggerEvent("GameResult", new GameResultMessage(true, gameFinalTime));

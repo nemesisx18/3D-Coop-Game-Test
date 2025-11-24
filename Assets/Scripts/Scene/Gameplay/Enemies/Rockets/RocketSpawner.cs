@@ -29,31 +29,6 @@ public class RocketSpawner : MonoBehaviour
         rocketTargets = characterSpawner.SpawnedCharacters;
     }
 
-    //private void SpawnRocketAtTarget(object message)
-    //{
-    //    bool canSpawn = (bool)message;
-
-    //    isSpawningRockets = canSpawn;
-
-    //    if (!isSpawningRockets)
-    //    {
-    //        return;
-    //    }
-
-    //    for (int i = 0; i < spawnQty; i++)
-    //    {
-    //        ItemRocket rocket = Instantiate(rocketPrefab, spawnLocation.position, rocketPrefab.gameObject.transform.rotation);
-    //        if (i < 2)
-    //        {
-    //            rocket.LaunchRocket(true, rocketTargets[i]);
-    //        }
-    //        else
-    //        {
-    //            rocket.ThrowRocket();
-    //        }
-
-    //    }
-    //}
     private void SpawnRocketAtTarget(object message)
     {
         bool canSpawn = (bool)message;

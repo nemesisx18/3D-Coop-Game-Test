@@ -55,9 +55,8 @@ public class CharacterData : MonoBehaviour, IDamageable
 
         if (characterHealth <= 0)
         {
-            EventManager.TriggerEvent("CharacterDefeated", new CharacterDefeatedMessage(characterIndex));
+            EventManager.TriggerEvent("CharacterDefeated", characterIndex);
 
-            //TO:DO Disable character visuals and interactions
             gameObject.SetActive(false);
         }
     }
@@ -82,8 +81,6 @@ public class CharacterData : MonoBehaviour, IDamageable
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, maxDistance))
         {
-            Debug.Log("Hit: " + hit.collider.name);
-
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable != null)
             {

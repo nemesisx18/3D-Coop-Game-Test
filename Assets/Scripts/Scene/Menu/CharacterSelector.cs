@@ -37,9 +37,19 @@ public class CharacterSelector : MonoBehaviour
 
         selectedPlayer1Index = SaveData.SaveDataInstance.Player1SelectedCharacter;
         selectedPlayer2Index = SaveData.SaveDataInstance.Player2SelectedCharacter;
+
+        DisplaySelectedCharacter();
+        SetupUIButton();
+    }
+
+    private void DisplaySelectedCharacter()
+    {
         selectablePlayer1Objects[selectedPlayer1Index].SetActive(true);
         selectablePlayer2Objects[selectedPlayer2Index].SetActive(true);
+    }
 
+    private void SetupUIButton()
+    {
         if (selectedPlayer1Index == 0)
         {
             player1PreviousButton.interactable = false;

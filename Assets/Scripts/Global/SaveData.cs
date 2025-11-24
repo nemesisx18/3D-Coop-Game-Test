@@ -19,6 +19,8 @@ public class SaveData : MonoBehaviour
 
     public int SfxValue => sfxValue;
 
+    public List<float> Scores => scores;
+
     public void Awake()
     {
         if (SaveDataInstance == null)
@@ -58,8 +60,6 @@ public class SaveData : MonoBehaviour
     {
         string json = JsonUtility.ToJson(this);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-
-        Debug.Log("Data Saved into JSON " + json);
     }
 
     public void LoadFromJson()
@@ -67,15 +67,13 @@ public class SaveData : MonoBehaviour
         string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
         {
-            Debug.Log("Loading Data from JSON");
-
             string json = File.ReadAllText(path);
             JsonUtility.FromJsonOverwrite(json, this);
+
+            LeaderboardData.instance.SortLeaderboard(scores);
         }
         else
         {
-            Debug.Log("No Save File Found, Loading Default Data");
-
             LoadDefaultData();
         }
     }
@@ -84,16 +82,12 @@ public class SaveData : MonoBehaviour
     {
         musicValue = newValue;
         SaveIntoJson();
-
-        Debug.Log("Music Value Updated to: " + newValue);
     }
 
     public void UpdateSfxValue(int newValue)
     {
         sfxValue = newValue;
         SaveIntoJson();
-
-        Debug.Log("SFX Value Updated to: " + newValue);
     }
 
     public void OnPlayer1CharacterSelected(object index)

@@ -26,8 +26,6 @@ public class BossAttackVariant1State : BaseBossState
     {
         base.ExitState(boss);
         hasAttacked = false;
-
-        
     }
 
     private void Attack(BossController boss)
@@ -51,7 +49,9 @@ public class BossAttackVariant1State : BaseBossState
     {
         hasAttacked = true;
         Attack(boss);
+
         yield return new WaitForSeconds(2.0f);
+
         boss.FireFlameEffect.transform.localScale = new Vector3(0.1f, 0.02f, 0.1f);
         boss.FireFlameEffect.SetActive(false);
 

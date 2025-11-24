@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameTimer : MonoBehaviour
 {
@@ -10,19 +11,25 @@ public class GameTimer : MonoBehaviour
     private float timer;
     private bool timerRunning = false;
 
+    private UnityAction onGameOver;
+
     private void OnEnable()
     {
-        EventManager.StartListening("GameOver", StopTimer);
+        EventManager.StartListening("GameOver", onGameOver);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening("GameOver", StopTimer);
+        EventManager.StopListening("GameOver", onGameOver);
+    }
+
+    private void Awake()
+    {
+        onGameOver = new UnityAction(StopTimer);
     }
 
     void Start()
     {
-        // Optionally start the timer immediately
         StartTimer();
     }
 
@@ -35,7 +42,6 @@ public class GameTimer : MonoBehaviour
             int minutes = Mathf.FloorToInt(timer / 60);
             int seconds = Mathf.FloorToInt(timer % 60);
 
-            // Update the UI Text
             timerText.text = string.Format("{00:00}:{1:00}", minutes, seconds);
         }
     }
@@ -46,17 +52,17 @@ public class GameTimer : MonoBehaviour
         timerRunning = true;
     }
 
-    public void StopTimer(object message)
+    public void StopTimer()
     {
         timerRunning = false;
     }
 
     public void ResetTimer()
     {
-        timer = 0f; // Resets the start time to the current time
+        timer = 0f; 
         if (timerText != null)
         {
-            timerText.text = "00:00"; // Resets the display
+            timerText.text = "00:00";
         }
     }
 }

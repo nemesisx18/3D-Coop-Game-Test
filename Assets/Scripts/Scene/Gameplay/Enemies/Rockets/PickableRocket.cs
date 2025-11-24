@@ -13,16 +13,8 @@ public class PickableRocket : BaseRocket, IInteractable
 
     private Transform targetParent;
 
-    private CapsuleCollider rocketCollider;
-
     private bool canMove = false;
     private bool onInteract = false;
-
-    private void Start()
-    {
-        rocketCollider = GetComponent<CapsuleCollider>();
-        rocketCollider.isTrigger = false;
-    }
 
     private void Update()
     {
@@ -64,7 +56,6 @@ public class PickableRocket : BaseRocket, IInteractable
                 throwTarget = bossController.BossPosition.position;
 
                 onInteract = false;
-                rocketCollider.isTrigger = true;
                 canMove = true;
             }
         }
@@ -81,7 +72,7 @@ public class PickableRocket : BaseRocket, IInteractable
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Enemy"))
+        if(other.gameObject.CompareTag("Enemy") && !onInteract)
         {
             IDamageable target = other.GetComponent<IDamageable>();
             if (target != null)

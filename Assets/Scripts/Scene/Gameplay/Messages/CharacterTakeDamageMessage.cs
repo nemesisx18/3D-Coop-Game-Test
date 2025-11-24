@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public struct CharacterTakeDamageMessage 
+public struct CharacterTakeDamageMessage
 {
     public int CharacterIndex { get; }
     public int RemainingHealth { get; }

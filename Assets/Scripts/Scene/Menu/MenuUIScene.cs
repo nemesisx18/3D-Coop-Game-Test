@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -40,6 +39,18 @@ public class MenuUIScene : MonoBehaviour
 
     private void Start()
     {
+        SetupButtonListener();
+
+        saveData = SaveData.SaveDataInstance;
+
+        LoadSavedSettings();
+
+        musicToggle.onValueChanged.AddListener(delegate { ChangeMusicSetting(); });
+        sfxToggle.onValueChanged.AddListener(delegate { ChangeSfxSetting(); });
+    }
+
+    private void SetupButtonListener()
+    {
         playButton.onClick.RemoveAllListeners();
         charaSelectButton.onClick.RemoveAllListeners();
         settingsButton.onClick.RemoveAllListeners();
@@ -58,14 +69,6 @@ public class MenuUIScene : MonoBehaviour
         charaSelectBackButton.onClick.AddListener(ToggleCharacterSelectMenu);
         settingsBackButton.onClick.AddListener(ToggleSettingsMenu);
         bestScoreBackButton.onClick.AddListener(ToggleBestScoreMenu);
-
-        saveData = SaveData.SaveDataInstance;
-
-        LoadSavedSettings();
-
-        musicToggle.onValueChanged.AddListener(delegate { ChangeMusicSetting(); });
-        sfxToggle.onValueChanged.AddListener(delegate { ChangeSfxSetting(); });
-
     }
 
     private void OnPlayButtonSelected()
@@ -79,7 +82,11 @@ public class MenuUIScene : MonoBehaviour
         isActive = !isActive;
 
         charaSelectPanel.SetActive(isActive);
+        UpdateDisplayedCharacter();
+    }
 
+    private void UpdateDisplayedCharacter()
+    {
         DisplayedP1Character[currentSelectedP1Character].SetActive(false);
         DisplayedP2Character[currentSelectedP2Character].SetActive(false);
 
@@ -129,13 +136,11 @@ public class MenuUIScene : MonoBehaviour
 
     public void ChangeMusicSetting()
     {
-        Debug.Log("Music Toggle is now: " + musicToggle.isOn);
         EventManager.TriggerEvent("ToggleMusic");
     }
 
     public void ChangeSfxSetting()
     {
-        Debug.Log("SFX Toggle is now: " + sfxToggle.isOn);
         EventManager.TriggerEvent("ToggleSfx");
     }
 }

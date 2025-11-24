@@ -11,14 +11,9 @@ public class BossData : MonoBehaviour, IDamageable
 
         if (maxHealth <= 0)
         {
-            Debug.Log("Boss defeated!");
             Destroy(gameObject);
 
             EventManager.TriggerEvent("GameOver", "Win");
-        }
-        else
-        {
-            Debug.Log("Boss took damage! Remaining health: " + maxHealth);
         }
     }
 }

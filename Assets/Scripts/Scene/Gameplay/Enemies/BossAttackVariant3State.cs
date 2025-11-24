@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class BossAttackVariant3State : BaseBossState
 {
     public override void EnterState(BossController boss)

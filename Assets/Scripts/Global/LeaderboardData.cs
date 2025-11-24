@@ -1,11 +1,10 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LeaderboardData : MonoBehaviour
 {
     public static LeaderboardData instance;
-    
+
     private List<float> scores = new List<float>();
 
     public List<float> Scores => scores;
@@ -20,7 +19,7 @@ public class LeaderboardData : MonoBehaviour
         EventManager.StopListening("GameResult", AddScore);
     }
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {
@@ -33,37 +32,50 @@ public class LeaderboardData : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        LoadScoreFromSaveData();
+    }
+
+    private void LoadScoreFromSaveData()
+    {
+        if (SaveData.SaveDataInstance.Scores != null)
+        {
+            scores = SaveData.SaveDataInstance.Scores;
+        }
+    }
+
     public void AddScore(object score)
     {
         GameResultMessage message = (GameResultMessage)score;
 
-        if(!message.ResultBool)
+        if (!message.ResultBool)
         {
             return;
         }
 
         if (scores.Count == 10)
         {
-            float lowestScore = Mathf.Min(scores.ToArray());
-            if (message.GameTime > lowestScore)
+            float longestScore = Mathf.Max(scores.ToArray());
+            if (message.GameTime > longestScore)
             {
-                scores.Remove(lowestScore);
+                scores.Remove(longestScore);
             }
             else
             {
-                return; // Do not add the new score if it's not higher than the lowest
+                return;
             }
         }
-        
+
         scores.Add(message.GameTime);
 
-        SortLeaderboard();
+        SortLeaderboard(scores);
 
         SaveData.SaveDataInstance.UpdateLeaderboard();
     }
 
-    public void SortLeaderboard()
+    public void SortLeaderboard(List<float> score)
     {
-        scores.Sort((a, b) => b.CompareTo(a));
+        score.Sort((a, b) => a.CompareTo(b));
     }
 }

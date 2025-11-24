@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public struct GameResultMessage
 {
     public bool ResultBool;

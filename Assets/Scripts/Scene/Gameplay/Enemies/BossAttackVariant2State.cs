@@ -21,49 +21,16 @@ public class BossAttackVariant2State : BaseBossState
     public override void EnterState(BossController boss)
     {
         base.EnterState(boss);
-
-        hasAttacked = false;
-        returnToOriginal = false;
-
-        originalPosition = boss.transform.position;
-
-        boss.Rb.isKinematic = true;
-
-        xTargetPosition = Random.Range(minXPosition, maxXPosition);
-        zTargetPosition = Random.Range(minZPosition, maxZPosition);
-
-        flyPos = new Vector3(boss.transform.position.x, 30f, boss.transform.position.z);
-        targetPosition = new Vector3(xTargetPosition, 30f, zTargetPosition);
-
-        boss.EagleAttackStrikeArea.transform.position = new Vector3(xTargetPosition, boss.EagleAttackStrikeArea.transform.position.y, zTargetPosition);
-        boss.EagleAttackStrikeArea.SetActive(true);
+        SetupBossData(boss);
+        CalculateAttackPosition(boss);
+        ActivateAttackWarningArea(boss);
     }
 
     public override void UpdateState(BossController boss)
     {
         base.UpdateState(boss);
-
-        if (canMove)
-        {
-            boss.transform.position = Vector3.MoveTowards(boss.transform.position, flyPos, 50f * Time.deltaTime);
-        }
-        if (Vector3.Distance(boss.transform.position, flyPos) < 0.1f)
-        {
-            canMove = false;
-            boss.transform.position = targetPosition;
-        }
-
-        if (returnToOriginal)
-        {
-            boss.transform.position = Vector3.MoveTowards(boss.transform.position, originalPosition, 15f * Time.deltaTime);
-
-            if (Vector3.Distance(boss.transform.position, originalPosition) < 0.1f)
-            {
-                boss.ChangeState(new BossAttackVariant3State());
-
-                returnToOriginal = false;
-            }
-        }
+        PrepareAttacking(boss);
+        ReturnBossPositionToOriginal(boss);
 
         if (hasAttacked)
         {
@@ -78,6 +45,58 @@ public class BossAttackVariant2State : BaseBossState
         base.ExitState(boss);
 
         boss.EagleAttackStrikeArea.SetActive(false);
+    }
+
+    private void SetupBossData(BossController boss)
+    {
+        hasAttacked = false;
+        returnToOriginal = false;
+        originalPosition = boss.transform.position;
+        boss.Rb.isKinematic = true;
+    }
+
+    private void CalculateAttackPosition(BossController boss)
+    {
+        xTargetPosition = Random.Range(minXPosition, maxXPosition);
+        zTargetPosition = Random.Range(minZPosition, maxZPosition);
+
+        flyPos = new Vector3(boss.transform.position.x, 30f, boss.transform.position.z);
+        targetPosition = new Vector3(xTargetPosition, 30f, zTargetPosition);
+    }
+
+    private void ActivateAttackWarningArea(BossController boss)
+    {
+        boss.EagleAttackStrikeArea.transform.position = new Vector3(xTargetPosition, boss.EagleAttackStrikeArea.transform.position.y, zTargetPosition);
+        boss.EagleAttackStrikeArea.SetActive(true);
+    }
+
+    private void PrepareAttacking(BossController boss)
+    {
+        if (canMove)
+        {
+            boss.transform.position = Vector3.MoveTowards(boss.transform.position, flyPos, 50f * Time.deltaTime);
+        }
+
+        if (Vector3.Distance(boss.transform.position, flyPos) < 0.1f)
+        {
+            canMove = false;
+            boss.transform.position = targetPosition;
+        }
+    }
+
+    private void ReturnBossPositionToOriginal(BossController boss)
+    {
+        if (returnToOriginal)
+        {
+            boss.transform.position = Vector3.MoveTowards(boss.transform.position, originalPosition, 15f * Time.deltaTime);
+
+            if (Vector3.Distance(boss.transform.position, originalPosition) < 0.1f)
+            {
+                boss.ChangeState(new BossAttackVariant3State());
+
+                returnToOriginal = false;
+            }
+        }
     }
 
     private IEnumerator AttackDelayCoroutine(BossController boss, float delay)

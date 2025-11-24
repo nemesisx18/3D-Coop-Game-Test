@@ -26,6 +26,10 @@ public class InputManager : MonoBehaviour
             {
                 EventManager.TriggerEvent("Move", new MoveMessage(Vector2.right, i));
             }
+            if(Input.GetKeyDown(inputConfig.ActionKey))
+            {
+                EventManager.TriggerEvent("Action", i);
         }
+    }
     }
 }

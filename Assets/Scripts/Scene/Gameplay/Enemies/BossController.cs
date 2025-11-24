@@ -1,14 +1,31 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class BossController : MonoBehaviour
 {
     public Rigidbody Rb;
+    public Transform RaycastPoint;
+
+    public GameObject FireFlameEffect;
+    public GameObject EagleAttackStrikeArea;
+
     public bool IsFlying = false;
 
     public float DefaultHeight;
     public float MaxHeight = 12f;
 
     private IBossState currentState;
+
+    private void OnEnable()
+    {
+        EventManager.StartListening("OnRocketHit", OnRocketExploded);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening("OnRocketHit", OnRocketExploded);
+    }
 
     private void Start()
     {
@@ -33,8 +50,16 @@ public class BossController : MonoBehaviour
         {
             currentState.ExitState(this);
         }
+
         currentState = newState;
         currentState.EnterState(this);
     }
 
+    private void OnRocketExploded()
+    {
+        if (currentState != null)
+        {
+            ChangeState(new BossMovingState());
+        }
+    }
 }

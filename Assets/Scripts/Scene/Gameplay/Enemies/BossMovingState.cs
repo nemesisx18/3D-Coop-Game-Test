@@ -15,7 +15,6 @@ public class BossMovingState : BaseBossState
         base.EnterState(boss);
 
         newXPosition = Random.Range(minXPosition, maxXPosition);
-        Debug.Log("BossMovingState: New Target X Position: " + newXPosition);
 
         targetPosition = new Vector3(newXPosition, boss.MaxHeight, boss.transform.position.z);
 
@@ -28,11 +27,8 @@ public class BossMovingState : BaseBossState
 
         boss.transform.position = Vector3.MoveTowards(boss.transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
-        // when the boss reaches the target position, pick a new one    
         if (Vector3.Distance(boss.transform.position, targetPosition) < 0.1f)
         {
-            Debug.Log("BossMovingState: Reached Target Position");
-
             boss.ChangeState(new BossAttackVariant1State());
         }
     }

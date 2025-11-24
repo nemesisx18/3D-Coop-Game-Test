@@ -11,17 +11,23 @@ public class CharacterSpawner : MonoBehaviour
     private int player1CharacterID;
     private int player2CharacterID;
 
+    public List<CharacterData> SpawnedCharacters => spawnedCharacters;
+
     private void OnEnable()
     {
         EventManager.StartListening("Move", MoveCharacter);
+        EventManager.StartListening("Action", OnActionKeyPressed);
+        EventManager.StartListening("LockingPlayer", OnPlayerAttackLocked);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening("Move", MoveCharacter);
+        EventManager.StopListening("Action", OnActionKeyPressed);
+        EventManager.StopListening("LockingPlayer", OnPlayerAttackLocked);
     }
 
-    private void Start()
+    private void Awake()
     {
         player1CharacterID = SaveData.SaveDataInstance.Player1SelectedCharacter;
         player2CharacterID = SaveData.SaveDataInstance.Player2SelectedCharacter;
@@ -45,5 +51,20 @@ public class CharacterSpawner : MonoBehaviour
         MoveMessage moveMessage = (MoveMessage)message;
 
         spawnedCharacters[moveMessage.PlayerId].OnMove(moveMessage.Move);
+    }
+
+    private void OnActionKeyPressed(object message)
+    {
+        int playerID = (int)message;
+        spawnedCharacters[playerID].OnActionKeyPressed();
+    }
+
+    private void OnPlayerAttackLocked(object message)
+    {
+        bool isLocked = (bool)message;
+        for (int i = 0; i < spawnedCharacters.Count; i++)
+        {
+            spawnedCharacters[i].OnBeingTargeted(isLocked);
+        }
     }
 }

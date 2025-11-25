@@ -48,7 +48,7 @@ public class GameTimer : MonoBehaviour
 
     public void StartTimer()
     {
-        timer = Time.time;
+        timer = 0f;
         timerRunning = true;
     }
 

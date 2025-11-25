@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingBar: {fileID: 1134493043}
-  waitTime: 5
+  waitTime: 15
 --- !u!1 &226891136
 GameObject:
   m_ObjectHideFlags: 0

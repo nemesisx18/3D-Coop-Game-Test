@@ -9,7 +9,7 @@ public class PickableRocket : BaseRocket, IInteractable
     private float xTargetPosition;
     private float zTargetPosition;
 
-    [SerializeField] private Vector3 throwTarget;
+    private Vector3 throwTarget;
 
     private BossController bossController;
 
@@ -27,14 +27,9 @@ public class PickableRocket : BaseRocket, IInteractable
 
     private void Update()
     {
-        if(explosive)
+        if (explosive)
         {
             throwTarget = bossController.BossPosition;
-        }
-        
-        if (canMove)
-        {
-            Move(throwTarget);
         }
 
         if (onInteract)
@@ -45,6 +40,14 @@ public class PickableRocket : BaseRocket, IInteractable
         if (Vector3.Distance(transform.position, throwTarget) < 0.1f)
         {
             canMove = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (canMove)
+        {
+            Move(throwTarget);
         }
     }
 

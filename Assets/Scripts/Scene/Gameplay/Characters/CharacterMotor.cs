@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterMotor : MonoBehaviour
 {
-    [field: Range(0, 20), SerializeField] private float characterSpeed = 15f;
+    [field: Range(0, 40), SerializeField] private float characterSpeed = 15f;
 
     private Rigidbody rb;
 
